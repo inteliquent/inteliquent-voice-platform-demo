@@ -20,7 +20,7 @@ This script ([in this repository](https://github.com/inteliquent/voyant-voice-pl
 
 The script will POST events to the following HTTP Request Logger using our `query` XML verb:
 
-http://webhook.site/#!/3324d98c-21ec-4fc2-9d9f-84c38f57b77a/0e015977-8a7a-4b1d-90b2-194060b87e61/1
+http://webhook.site/#!/7dc48a5d-f66e-464f-a208-3411c139fda4
 
 
 # Assigning the Script to a Phone Number
