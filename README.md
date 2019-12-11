@@ -97,7 +97,7 @@ The app will register via SIP and will ring if one of the test numbers (associat
 
 After opening the app for the first time, scan this QR code to provision the application for this demo.
 
-![Provisioning QR Code](https://www.dropbox.com/s/i39vopm1dmld67p/cloudsoftphone-qr-XXXXXXXX-1-e4aa4d23213daeee3612c07af8a009ad-live-660px.png?dl=0&raw=true)
+![Provisioning QR Code](https://www.dropbox.com/s/nyjb1u5e2cwtsj3/ACR1.png?dl=0&raw=true)
 
 # Further Documentation
 
