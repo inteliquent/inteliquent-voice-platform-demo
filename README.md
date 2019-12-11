@@ -69,7 +69,7 @@ The script associated with this number can be edited in the Voyant Admin Portal 
 
 **Voyant Admin Portal Example**
 
-![Edit via Admin Portal](https://www.dropbox.com/s/XXXXXXXX/Screenshot%202019-11-05%2010.59.27.png?dl=0&raw=true)
+![Edit via Admin Portal](https://www.dropbox.com/s/tsqzdjs1ymqten1/Screenshot%202019-12-11%2013.00.16.png?dl=0&raw=true)
 
 **REST API Example**
 
