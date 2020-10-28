@@ -1,5 +1,5 @@
 # Voice Platform Script Demo
-This repository contains information on how to attach a custom call flow Voice API script to a Voyant Phone Number.
+This repository contains an example script for a custom Voice Platform use-case.
 
 # The Script
 This script ([in this repository](https://github.com/inteliquent/voyant-voice-platform-demo/blob/master/script-example.xml)) accomplishes the following use-case:
