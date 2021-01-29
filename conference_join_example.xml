@@ -2,6 +2,8 @@
 	<head/>
 		<body>
 		<snippet id="fetch_template">
+			<!-- WE EXPECT THIS QUERY RESPONSE TO CONTAIN THE XML NEEDED FOR THE CONFERENCE ROOM -->
+			<!-- IF YOUR CONFERENCE XML DOES NOT NEED TO BE DYNAMIC, YOU COULD JUST PLACE IT IN THIS BLOCK INSTEAD OF USING A QUERY -->
 			<query url="{{settings.SITE_URL}}/voyant/webhook/inbound/" method="post">
 				<param name='NewCall' value='false'/>
 		        <param name='ForwardedFrom' value='{% verbatim %}{{@Diversion}}{% endverbatim %}'/>
@@ -71,7 +73,7 @@
 					</say>
 				</onError>
 			</query>
-			<!-- we expect either:
+			<!-- Here, we expect a server response containing either:
 			<no_room/> or
 			<second_prompt TEMPLATE_PIN='123456'/> -->
 		</snippet>
