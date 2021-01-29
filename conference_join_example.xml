@@ -1,0 +1,153 @@
+<script>
+	<head/>
+		<body>
+		<snippet id="fetch_template">
+			<!-- <stop-listen/> -->
+			<query url="{{settings.SITE_URL}}/voyant/webhook/inbound/" method="post">
+				<param name='NewCall' value='false'/>
+		        <param name='ForwardedFrom' value='{% verbatim %}{{@Diversion}}{% endverbatim %}'/>
+		        <param name='OriginalCallId' value='{% verbatim %}{{X-OrigCallId}}{% endverbatim %}'/>
+		        <param name='OrigTo' value='{% verbatim %}{{X-Orig-To}}{% endverbatim %}'/>
+		        <param name='AccountId' value='{% verbatim %}{{X-Account-Id}}{% endverbatim %}'/>
+		        <param name='AnonymousCall' value='{% verbatim %}{{X-Anonymous-Call}}{% endverbatim %}'/>
+		        <param name='CalleeId' value='{% verbatim %}{{INBOUND_CALLEE_ID}}{% endverbatim %}'/>
+		        <param name='CallerNumber' value='{% verbatim %}{{INBOUND_CALLER_NUMBER}}{% endverbatim %}'/>
+		        <param name='CalleeNumber' value='template-{% verbatim %}{{TEMPLATE_TOKEN}}{% endverbatim %}'/>
+		        <param name='OriginalCalleeNumber' value='{% verbatim %}{{INBOUND_CALLEE_NUMBER}}{% endverbatim %}'/>
+		        <param name='CallerId' value='{% verbatim %}{{INBOUND_CALLER_ID}}{% endverbatim %}'/>
+		        <param name='ScriptId' value='{% verbatim %}{{SCRIPT_ID}}{% endverbatim %}'/>
+		        <param name='Direction' value='{% verbatim %}{{DIRECTION}}{% endverbatim %}'/>
+		        <param name='CallId' value='{% verbatim %}{{CALL_ID}}{% endverbatim %}'/>
+				<onError>
+					<say TEXT="An error occured">
+						<onComplete>
+							<goodbye/>
+						</onComplete>
+					</say>
+				</onError>
+			</query>
+		</snippet>
+		<snippet id='no_room'>
+			<say TEXT='Invalid meeting ID.'>
+				<onComplete>
+					<initial_prompt ROOM=''>
+						<onError>
+							<goodbye/>
+						</onError>
+					</initial_prompt>
+				</onComplete>
+			</say>
+		</snippet>
+		<snippet id='no_pin'>
+			<say TEXT='Invalid PIN.'>
+				<onComplete>
+					<second_prompt PIN=''>
+						<onError>
+							<goodbye/>
+						</onError>
+					</second_prompt>
+				</onComplete>
+			</say>
+		</snippet>
+		<snippet id="pin_auth">
+			<match a="{{PIN}}" b="{{TEMPLATE_PIN}}" type="equals">
+				<onTrue>
+					<fetch_template/>
+				</onTrue>
+				<onFalse>
+					<no_pin/>
+				</onFalse>
+			</match>
+		</snippet>
+		<snippet id="submit_room">
+			<query url="{{settings.SITE_URL}}/voyant/callback/" method="post">
+				<param name="type" value="FetchTemplate"/>
+				<param name="by" value="digits"/>
+				<param name="SearchValue" value="{% verbatim %}{{ROOM}}{% endverbatim %}"/>
+				<onError>
+					<say TEXT="An error occured">
+						<onComplete>
+							<goodbye/>
+						</onComplete>
+					</say>
+				</onError>
+			</query>
+			<!-- we expect either:
+			<no_room/> or
+			<second_prompt TEMPLATE_PIN='123456'/> -->
+		</snippet>
+		<snippet id='initial_prompt' limit='4'>
+			<snippet id="get_room" limit="6">
+				<input_timer/>
+				<onDTMF ref="ROOM">
+					<cancel-timeout target='input_timer'/>
+					<get_room>
+						<onError>
+							<submit_room/>
+						</onError>
+					</get_room>
+				</onDTMF>
+			</snippet>
+			<snippet id='input_timer'>
+				<timeout seconds='10' alias='input_timer'>
+					<onComplete>
+						<no_room/>
+					</onComplete>
+				</timeout>
+			</snippet>
+			<say TEXT="Please enter your meeting ID."/>
+			<flush event='onDTMF'/>
+			<get_room/>
+		</snippet>
+		<snippet id='second_prompt' limit='4'>
+			<snippet id="get_pin" limit="6">
+				<input_timer/>
+				<onDTMF ref="PIN">
+					<cancel-timeout target='input_timer'/>
+					<get_pin>
+						<onError>
+							<pin_auth/>
+						</onError>
+					</get_pin>
+				</onDTMF>
+			</snippet>
+			<snippet id='input_timer'>
+				<timeout seconds='10' alias='input_timer'>
+					<onComplete>
+						<no_pin/>
+					</onComplete>
+				</timeout>
+			</snippet>
+			<say TEXT="Please enter the access PIN."/>
+			<flush event='onDTMF'/>
+			<get_pin/>
+		</snippet>
+		<snippet id='goodbye'>
+			<say TEXT='Goodbye!'>
+				<onComplete>
+					<hangup/>
+				</onComplete>
+			</say>
+		</snippet>
+		<snippet id="global-hangup">
+			<query method="post" url="{{settings.SITE_URL}}/voyant/callback/">
+				<optional name="type" value="hangup"></optional>
+				<optional name="callId" value="{% verbatim %}{{X-OrigCallId}}{% endverbatim %}"></optional>
+			</query>
+		</snippet>
+		<accept/>
+		<ring/>
+		<answer alias="{% verbatim %}{{X-OrigCallId}}{% endverbatim %}">
+			<onConnect>
+				<say TEXT='HELLO!'>
+					<onComplete>
+						<initial_prompt/>
+					</onComplete>
+				</say>
+			</onConnect>
+			<onDisconnect>
+				<run-snippet id="global-hangup"></run-snippet>
+			</onDisconnect>
+		</answer>
+	</body>
+</script>
