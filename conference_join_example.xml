@@ -2,7 +2,6 @@
 	<head/>
 		<body>
 		<snippet id="fetch_template">
-			<!-- <stop-listen/> -->
 			<query url="{{settings.SITE_URL}}/voyant/webhook/inbound/" method="post">
 				<param name='NewCall' value='false'/>
 		        <param name='ForwardedFrom' value='{% verbatim %}{{@Diversion}}{% endverbatim %}'/>
