@@ -4,21 +4,21 @@
 		<snippet id="fetch_template">
 			<!-- WE EXPECT THIS QUERY RESPONSE TO CONTAIN THE XML NEEDED FOR THE CONFERENCE ROOM -->
 			<!-- IF YOUR CONFERENCE XML DOES NOT NEED TO BE DYNAMIC, YOU COULD JUST PLACE IT IN THIS BLOCK INSTEAD OF USING A QUERY -->
-			<query url="{{settings.SITE_URL}}/voyant/webhook/inbound/" method="post">
+			<query url="/voyant/webhook/inbound/" method="post">
 				<param name='NewCall' value='false'/>
-		        <param name='ForwardedFrom' value='{% verbatim %}{{@Diversion}}{% endverbatim %}'/>
-		        <param name='OriginalCallId' value='{% verbatim %}{{X-OrigCallId}}{% endverbatim %}'/>
-		        <param name='OrigTo' value='{% verbatim %}{{X-Orig-To}}{% endverbatim %}'/>
-		        <param name='AccountId' value='{% verbatim %}{{X-Account-Id}}{% endverbatim %}'/>
-		        <param name='AnonymousCall' value='{% verbatim %}{{X-Anonymous-Call}}{% endverbatim %}'/>
-		        <param name='CalleeId' value='{% verbatim %}{{INBOUND_CALLEE_ID}}{% endverbatim %}'/>
-		        <param name='CallerNumber' value='{% verbatim %}{{INBOUND_CALLER_NUMBER}}{% endverbatim %}'/>
-		        <param name='CalleeNumber' value='template-{% verbatim %}{{TEMPLATE_TOKEN}}{% endverbatim %}'/>
-		        <param name='OriginalCalleeNumber' value='{% verbatim %}{{INBOUND_CALLEE_NUMBER}}{% endverbatim %}'/>
-		        <param name='CallerId' value='{% verbatim %}{{INBOUND_CALLER_ID}}{% endverbatim %}'/>
-		        <param name='ScriptId' value='{% verbatim %}{{SCRIPT_ID}}{% endverbatim %}'/>
-		        <param name='Direction' value='{% verbatim %}{{DIRECTION}}{% endverbatim %}'/>
-		        <param name='CallId' value='{% verbatim %}{{CALL_ID}}{% endverbatim %}'/>
+		        <param name='ForwardedFrom' value='{{@Diversion}}'/>
+		        <param name='OriginalCallId' value='{{X-OrigCallId}}'/>
+		        <param name='OrigTo' value='{{X-Orig-To}}'/>
+		        <param name='AccountId' value='{{X-Account-Id}}'/>
+		        <param name='AnonymousCall' value='{{X-Anonymous-Call}}'/>
+		        <param name='CalleeId' value='{{INBOUND_CALLEE_ID}}'/>
+		        <param name='CallerNumber' value='{{INBOUND_CALLER_NUMBER}}'/>
+		        <param name='CalleeNumber' value='template-{{TEMPLATE_TOKEN}}'/>
+		        <param name='OriginalCalleeNumber' value='{{INBOUND_CALLEE_NUMBER}}'/>
+		        <param name='CallerId' value='{{INBOUND_CALLER_ID}}'/>
+		        <param name='ScriptId' value='{{SCRIPT_ID}}'/>
+		        <param name='Direction' value='{{DIRECTION}}'/>
+		        <param name='CallId' value='{{CALL_ID}}'/>
 				<onError>
 					<say TEXT="An error occured">
 						<onComplete>
@@ -61,10 +61,10 @@
 			</match>
 		</snippet>
 		<snippet id="submit_room">
-			<query url="{{settings.SITE_URL}}/voyant/callback/" method="post">
+			<query url="/voyant/callback/" method="post">
 				<param name="type" value="FetchTemplate"/>
 				<param name="by" value="digits"/>
-				<param name="SearchValue" value="{% verbatim %}{{ROOM}}{% endverbatim %}"/>
+				<param name="SearchValue" value="{{ROOM}}"/>
 				<onError>
 					<say TEXT="An error occured">
 						<onComplete>
@@ -131,14 +131,14 @@
 			</say>
 		</snippet>
 		<snippet id="global-hangup">
-			<query method="post" url="{{settings.SITE_URL}}/voyant/callback/">
+			<query method="post" url="/voyant/callback/">
 				<optional name="type" value="hangup"></optional>
-				<optional name="callId" value="{% verbatim %}{{X-OrigCallId}}{% endverbatim %}"></optional>
+				<optional name="callId" value="{{X-OrigCallId}}"></optional>
 			</query>
 		</snippet>
 		<accept/>
 		<ring/>
-		<answer alias="{% verbatim %}{{X-OrigCallId}}{% endverbatim %}">
+		<answer alias="{{X-OrigCallId}}">
 			<onConnect>
 				<say TEXT='HELLO!'>
 					<onComplete>
